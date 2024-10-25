@@ -16,6 +16,9 @@
 //#include "API_I2C.h"    // I2C Bus Library for communication
 // #include "../mssp1.h"
 
+#include <string.h>
+#include <stdio.h>
+
 #include "mcc_generated_files/i2c_host/mssp1.h"
 
 // BMX055 I2C addresses
@@ -35,30 +38,6 @@
 #define ADXL_HIG_THRESHOLD      150
 
 
-const int BMX055_ADDRESS = (0x53);
-
-//unsigned char _buff[6];
-//char POWER_CTL = 0x2D;
-//char DATA_FORMAT = 0x31;
-//char DATAX0 = 0x32;   //X-Axis_0
-//char DATAX1 = 0x33;   //X-Axis_1
-//char DATAY0 = 0x34;   //Y-Axis_0
-//char DATAY1 = 0x35;   //Y-Axis_1
-//char DATAZ0 = 0x36;   //Z-Axis_0
-//char DATAZ1 = 0x37;   //Z-Axis_1
-
-// Define BMX055 registers
-#define BMX055_DEVID        0x00
-#define BMX055_POWER_CTL    0x2D
-#define BMX055_DATAX0       0x32
-#define BMX055_DATAX1       0x33
-#define BMX055_DATAY0       0x34
-#define BMX055_DATAY1       0x35
-#define BMX055_DATAZ0       0x36
-#define BMX055_DATAZ1       0x37
-#define BMX055_DATA_FORMAT  0x31
-#define BMX055_BW_RATE      0x2C
-
 typedef enum
 {
     ADXL_LOW,
@@ -66,11 +45,8 @@ typedef enum
     ADXL_HIGH
 } ADXL_Level_t;
 
-void BMX055_Write(uint8_t reg, uint8_t data);
-uint8_t BMX055_Read(uint8_t reg);
-void BMX055_ReadMultiple(uint8_t reg, uint8_t* buffer, uint8_t len);
-void BMX055_ReadAccel(int16_t* x, int16_t* y, int16_t* z);
-float resultMagnitude(int16_t x, int16_t y, int16_t z);
+void BMX055_Write(uint8_t address, uint8_t reg, uint8_t data);
+uint8_t BMX055_Read(uint8_t deviceAddress, uint8_t reg, int16_t * valueX, int16_t * valueY, int16_t * valueZ);
 void BMX055_Init(void) ;
 
 

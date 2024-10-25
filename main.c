@@ -46,37 +46,10 @@
     Main application
 */
 
-// Function prototypes
-void BMX055_Init(void);
-void BMX055_ReadAccelerometer(int16_t *x, int16_t *y, int16_t *z);
-uint8_t BMX055_ReadRegister(uint8_t reg);
-void BMX055_WriteRegister(uint8_t reg, uint8_t data);void BXM055_I2C_Write(uint8_t bmx055_reg, uint8_t bmx055_data);
-uint8_t BXM055_I2C_Read(uint8_t bmx055_reg);
-
-float application_accelerometer(ADXL_Level_t * ADXL_Level);
-
 
 // Delay in milliseconds
 void delay_ms(unsigned long delay_value){
     for(unsigned long x=0; x < delay_value; x++) __delay_ms(1);
-}
-
-void PPS_Init(void) {
-    // Unlock PPS registers
-    PPSLOCK = 0x55;
-    PPSLOCK = 0xAA;
-    PPSLOCKbits.PPSLOCKED = 0; // Unlock sequence
-
-    // Configure RB2 as SDA and RB3 as SCL for I2C1
-    SSP1DATPPS = 0x0A;  // Set RB2 (pin 10) as I2C1 SDA input
-    SSP1CLKPPS = 0x0B;  // Set RB3 (pin 11) as I2C1 SCL input
-    RB2PPS = 0x14;      // Set RB2 as I2C1 SDA output
-    RB3PPS = 0x13;      // Set RB3 as I2C1 SCL output
-
-    // Lock PPS registers
-    PPSLOCK = 0x55;
-    PPSLOCK = 0xAA;
-    PPSLOCKbits.PPSLOCKED = 1; // Lock sequence
 }
 
 
@@ -101,93 +74,28 @@ int main(void)
     // Disable the Peripheral Interrupts 
     //INTERRUPT_PeripheralInterruptDisable(); 
     
-    
-    
-    
-    
-    
     BMX055_Init();
-    
-    //BMX055_Write(START_REGISTER_ACCEL, 0x08);
-    // BMX055_Read(START_REGISTER_ACCEL);
-    //BMX055_Write(0x50, 0x32);
-    // BMX055_Init();
 
     LED_SYS_SetDigitalOutput();
+    
+    int16_t ax, ay, az;
     while(1)
     {
         LED_SYS_SetHigh();
         delay_ms(100);
         LED_SYS_SetLow();
         delay_ms(900);
-        BMX055_Read(START_REGISTER_ACCEL);
+        BMX055_Read(ACCEL_ADDRESS, START_REGISTER_ACCEL, &ax, &ay, &az);
+        BMX055_Read(GYRO_ADDRESS, START_REGISTER_GYRO, &ax, &ay, &az);
+        BMX055_Read(MAG_ADDRESS, START_REGISTER_MAG, &ax, &ay, &az);
+        
+        
+//        printf("Main Result      -> ax: %d ,", ax);
+//        printf("ay: %d ,", ay);
+//        printf("az: %d\n", az);
     }    
 }
-
-//
-//void BXM055_I2C_Write(uint8_t bmx055_reg, uint8_t bmx055_data) {
-//    
-//    uint8_t bmx055_address = 0x18;
-//    
-//    uint8_t dataarray[2];
-//    
-//    dataarray[0] = bmx055_reg;
-//    dataarray[1] = bmx055_data;
-//    
-//    I2C1_Write(bmx055_address, dataarray, 2);
-//}
-//
-//uint8_t BXM055_I2C_Read(uint8_t bmx055_reg) {
-//    
-//    uint8_t bmx055_Data[];
-//    
-//    uint8_t bmx055_address = 0x18;
-//    
-//    
-//    //I2C1_WriteRead(bmx055_address | 0x01, bmx055_reg, &bmx055_Data, 1);
-//    I2C1_WriteRead(bmx055_address, &bmx055_reg, 1, &bmx055_Data, 1);
-//    
-////    I2C1_MasterStart();
-////    I2C1_MasterWrite(address);
-////    I2C1_MasterWrite(reg);
-////    I2C1_MasterRestart();
-////    I2C1_MasterWrite(address | 0x01);
-////    data = I2C1_MasterRead(NACK);
-////    I2C1_MasterStop();
-//    return bmx055_Data;
-//}
-
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// AUXILIARY FUNCTIONS /////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-
-float application_accelerometer(ADXL_Level_t * ADXL_Level)
-{
-    int16_t axisX, axisY, axisZ;
-    
-    static float movementMagnitude, previousMagnitude;
-    int deltaMagnitude;
-    
-    BMX055_ReadAccel(&axisX, &axisY, &axisZ);
-        
-    movementMagnitude = resultMagnitude(axisX, axisY, axisZ);
-
-    deltaMagnitude = abs((int)(movementMagnitude - previousMagnitude));
-
-    if(deltaMagnitude < ADXL_LOW_THRESHOLD)
-        *ADXL_Level = ADXL_LOW;
-
-    else if(deltaMagnitude > ADXL_LOW_THRESHOLD && deltaMagnitude < ADXL_HIG_THRESHOLD)
-        *ADXL_Level = ADXL_MEDIUM;
-
-    else if(deltaMagnitude > ADXL_HIG_THRESHOLD)
-        *ADXL_Level = ADXL_HIGH;
-
-    previousMagnitude = movementMagnitude;
-
-    return deltaMagnitude;
-}
-
-
-
