@@ -39,9 +39,6 @@
 #include "mcc_generated_files/system/system.h"
 #include "API_BMX055_18F47K42.h"
 
-
-
-
 /*
     Main application
 */
@@ -85,9 +82,9 @@ int main(void)
         delay_ms(100);
         LED_SYS_SetLow();
         delay_ms(900);
-        BMX055_Read(ACCEL_ADDRESS, START_REGISTER_ACCEL, &ax, &ay, &az);
-        BMX055_Read(GYRO_ADDRESS, START_REGISTER_GYRO, &ax, &ay, &az);
-        BMX055_Read(MAG_ADDRESS, START_REGISTER_MAG, &ax, &ay, &az);
+        BMX055_Read(BMX055_ACC_ADDRESS, START_REGISTER_ACCEL, &ax, &ay, &az);
+        BMX055_Read(BMX055_GYRO_ADDRESS, START_REGISTER_GYRO, &ax, &ay, &az);
+        BMX055_Read(BMX055_MAG_ADDRESS, START_REGISTER_MAG, &ax, &ay, &az);
         
         
 //        printf("Main Result      -> ax: %d ,", ax);

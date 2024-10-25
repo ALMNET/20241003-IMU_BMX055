@@ -65,7 +65,6 @@
         </logicalFolder>
       </logicalFolder>
       <itemPath>main.c</itemPath>
-      <itemPath>asdasd.c</itemPath>
       <itemPath>API_BMX055_18F47K42.c</itemPath>
     </logicalFolder>
   </logicalFolder>
@@ -224,16 +223,6 @@
         <property key="user-pack-device-support" value=""/>
         <property key="wpo-lto" value="false"/>
       </XC8-config-global>
-      <item path="asdasd.c" ex="true" overriding="false">
-        <HI-TECH-COMP>
-        </HI-TECH-COMP>
-        <HI-TECH-LINK>
-        </HI-TECH-LINK>
-        <XC8-CO>
-        </XC8-CO>
-        <XC8-config-global>
-        </XC8-config-global>
-      </item>
     </conf>
   </confs>
 </configurationDescriptor>
